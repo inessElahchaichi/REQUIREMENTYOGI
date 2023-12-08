@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    /* Your CSS styles here */
+  </style>
+</head>
+<body>
+  <div>
+    <input type="text" id="reqKeyInput" placeholder="Enter REQ Key">
+    <button onclick="loadMetadata()">Load Metadata</button>
+  </div>
+  <div id="metadata-container">
+    <!-- Metadata will be displayed here -->
+  </div>
+
+  <script>
+    function loadMetadata() {
+      var reqKey = document.getElementById('reqKeyInput').value;
+      if(reqKey) {
+        google.script.run.withSuccessHandler(displayMetadata)
+                         .withFailureHandler(handleError)
+                         .getRequirementMetadata(reqKey);
+      } else {
+        alert('Please enter a Requirement Key.');
+      }
+    }
+
+    function displayMetadata(metadata) {
+      var container = document.getElementById('metadata-container');
+      if(metadata && metadata.title) {
+        container.innerHTML = '<strong>Title:</strong> ' + metadata.title +
+                              '<br><strong>Description:</strong> ' + metadata.description;
+      } else {
+        container.innerHTML = 'No metadata found for the given REQ key.';
+      }
+    }
+
+    function handleError(error) {
+      var container = document.getElementById('metadata-container');
+      container.innerHTML = 'Error: ' + error.message;
+    }
+  </script>
+</body>
+</html>
